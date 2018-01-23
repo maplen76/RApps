@@ -4,7 +4,7 @@ library(htmlTable)
 
 today <- Sys.Date()
 
-path <- "//ubisoft.org/CTUStudio/Departments/BES_Team/Private/JIRADashboard/TrivialPursuit/"
+path <- "//XXXX/XXXX/"
 file_df <- data.frame(file = list.files(path), stringsAsFactors = F) %>%
     mutate(date = str_extract(file,"\\d+\\.\\d+\\.\\d+"),
            date = as.Date(date, format = "%Y.%m.%d"),
@@ -53,20 +53,20 @@ y <- htmlTable(f,
 body <- paste0("<html>", y, "</html>")
 
 library(sendmailR)
-from <- "ctu-trivialpursuit_all@ubisoft.com"
-to <- "Xiao-Ling.Qiu@ubisoft.com"
-cc <- "jing.wang@ubisoft.com"
+from <- "####@XXXX.com"
+to <- "XXX@XXXX.com"
+cc <- "XXX@XXXX.com"
 subject <- paste0(nb_groups$n[1], '/', sum(nb_groups$n), " members didn't log time by ", file_df$log[1])
 msg <- mime_part(body)
 msg[["headers"]][["Content-Type"]] <- "text/html"
-mailControl = list(smtpServer = "smtp-ncsa.ubisoft.org")
+mailControl = list(smtpServer = "xxxxxxx")
 sendmail(from=from,to=to, cc = cc,subject=subject,msg=msg,control=mailControl)
 
 
 # library(RDCOMClient)
 # OutApp <- COMCreate("Outlook.Application")
 # outMail <- OutApp$CreateItem(0)
-# outMail[["SentOnBehalfOfName"]] = "jing.wang@ubisoft.com"
+# outMail[["SentOnBehalfOfName"]] = "XXXX@XXXX.com"
 # outMail[["To"]] = "jing.wang@ubisoft.com"
 # outMail[["subject"]] = paste0(nb_groups$n[1], '/', sum(nb_groups$n), " members didn't log time by ", file_df$date[1])
 # outMail[["HTMLbody"]] = body
