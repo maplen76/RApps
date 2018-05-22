@@ -1,3 +1,5 @@
+# how to sent html mail with sendmialR package
+
 library(sendmailR)
 recipient <- c("xxx@xxx.com", "xxx@xxx.com")
 
