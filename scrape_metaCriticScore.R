@@ -19,7 +19,7 @@ scrape_text <- function(htmlnodes, css_selector){
 # build empty dataframe to store data
 meta_games_all <- data.frame()
 
-for (i in 0:0) {
+for (i in 0:190) {
   page = paste0("https://www.metacritic.com/browse/games/score/metascore/all/all/filtered?page=", as.character(i))
   meta_html <- read_html(page)
   
@@ -56,7 +56,7 @@ for (i in 0:0) {
     # genre
     genre[j] <- scrape_text(game, "li.summary_detail.product_genre")
 
-    # nbplayers
+    # nb players
     nbplayers[j] <- scrape_text(game, "li.summary_detail.product_players")
 
     # rating
@@ -79,7 +79,7 @@ for (i in 0:0) {
 
     # description
     title_description <- scrape_text(game, "div.details.main_details > ul > li > span.data > span > span.blurb.blurb_expanded")
-    if (length(title_description) == 0) {
+    if ( is.na(title_description) ) {
       title_description <-scrape_text(game, "div.details.main_details > ul > li > span.data > span")
     }
     description[j] <- title_description
