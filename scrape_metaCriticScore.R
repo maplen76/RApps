@@ -19,7 +19,7 @@ scrape_text <- function(htmlnodes, css_selector){
 # build empty data frame to store data
 meta_games_all <- data.frame()
 
-for (i in 36:36) {
+for (i in 0:190) {
 
   page = paste0("https://www.metacritic.com/browse/games/score/metascore/all/all/filtered?page=", as.character(i))
   meta_html <- read_html(page)
@@ -29,6 +29,11 @@ for (i in 36:36) {
     html_nodes(css = ".title  h3") |>
     html_text2()
   
+  title_index <- meta_html |>
+    html_nodes(css = "td.clamp-summary-wrap > span") |>
+    html_text2() |>
+    str_remove_all(pattern = "\\.")
+
   # extract link of each game
   title_url <- meta_html |> 
     html_nodes(css = "td.clamp-image-wrap > a") |>
@@ -46,12 +51,15 @@ for (i in 36:36) {
   metaScore <- c()
   userScore <- c()
   description <- c()
+  nb_critic_reviews <- c()
+  nb_user_rating <- c()
   
   for (j in 1:length(title_url_1)) {
     # game detail
     
     try(
       {
+        
         game <- read_html(title_url_1[j])
         
         # publisher
@@ -90,6 +98,13 @@ for (i in 36:36) {
           title_description <-scrape_text(game, "div.details.main_details > ul > li > span.data > span")
         }
         description[j] <- title_description
+        
+        # number critic reviews
+        nb_critic_reviews[j] <- scrape_text(game, "div.details.main_details > div > div > div.summary > p > span.count > a > span")
+        
+        # number user rating
+        nb_user_rating[j] <- scrape_text(game, "div.details.side_details > div:nth-child(1) > div > div.summary > p > span.count > a")
+          
       },
     silent = TRUE
     )
@@ -97,6 +112,7 @@ for (i in 36:36) {
   }
   
   mata_games <- data.frame(
+    idx = title_index,
     name = title_name, 
     releasedate = releasedate,
     metaScore = metaScore,
@@ -109,7 +125,9 @@ for (i in 36:36) {
     rating = rating,
     platform = platform,
     platform_other = platform_other,
-    description = description
+    description = description,
+    nb_critic_reviews = nb_critic_reviews,
+    nb_user_rating = nb_user_rating
   )
   
   meta_games_all <- rbind.data.frame(meta_games_all, mata_games)
